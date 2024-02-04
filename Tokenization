@@ -1,0 +1,23 @@
+# Sentence tokenization
+import nltk
+nltk.download('punkt')
+from nltk.tokenize import sent_tokenize
+text = "Are you curious about tokenization? Let's see how it works! We need to analyze a couple of sentences with punctuations to see it in action."
+
+sent_tokenize_list = sent_tokenize(text)
+print ("\nSentence tokenizer:")
+print (sent_tokenize_list)
+
+from nltk.tokenize import word_tokenize
+print ("\nWord tokenizer:")
+print (word_tokenize(text))
+# Create a new punkt word tokenizer
+from nltk.tokenize import WordPunctTokenizer
+WordPunctTokenizer().tokenize(text)
+print ("\nPunkt word tokenizer:")
+print (WordPunctTokenizer().tokenize(text))
+# Create a new WordPunct tokenizer
+from nltk.tokenize import WordPunctTokenizer
+word_punct_tokenizer = WordPunctTokenizer()
+print ("\nWord punct tokenizer:")
+print (word_punct_tokenizer.tokenize(text))
