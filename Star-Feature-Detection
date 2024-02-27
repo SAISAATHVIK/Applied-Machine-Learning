@@ -1,0 +1,23 @@
+import sys
+import cv2
+from google.colab.patches import cv2_imshow
+import numpy as np
+
+class StarFeatureDetector(object):
+    def __init__(self):
+        self.detector = cv2.xfeatures2d.StarDetector_create()
+
+    def detect(self, img):
+        return self.detector.detect(img)
+
+if __name__ == '__main__':
+    input_file = sys.argv[1]
+    input_img = cv2.imread("/content/anya forger.jpg")  # Use input_file instead of hardcoded path
+    img_gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
+    keypoints = StarFeatureDetector().detect(img_gray)  # Pass img_gray instead of input_img
+    output_img = np.copy(input_img)
+    cv2.drawKeypoints(input_img, keypoints, output_img,
+                      flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    cv2_imshow (output_img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
