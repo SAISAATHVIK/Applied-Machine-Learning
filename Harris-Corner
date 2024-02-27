@@ -1,0 +1,14 @@
+import sys
+from google.colab.patches import cv2_imshow
+import cv2
+import numpy as np
+input_file = sys.argv[1]
+img = cv2.imread('/content/Screenshot 2023-07-06 015912.png')
+cv2_imshow(img)
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+img_gray = np.float32(img_gray)
+img_harris = cv2.cornerHarris(img_gray, 7, 5, 0.04)
+img_harris = cv2.dilate(img_harris, None)
+img[img_harris > 0.01 * img_harris.max()] = [0, 0, 0]
+cv2_imshow(img)
+cv2.waitKey(0)
