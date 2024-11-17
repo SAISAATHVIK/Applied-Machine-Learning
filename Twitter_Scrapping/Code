@@ -1,1 +1,56 @@
-Xyz
+import snscrape.modules.twitter as sntwitter
+import pandas as pd
+from datetime import datetime
+import ssl
+import certifi
+import os
+
+# Set SSL context
+ssl_context = ssl.create_default_context(cafile=certifi.where())
+os.environ['SSL_CERT_FILE'] = certifi.where()
+
+# Function to scrape tweets
+def scrape_tweets(username, since, until, max_tweets=1000):
+    tweets_list = []
+    query = f"from:{username} since:{since} until:{until}"
+    
+    for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
+        if i >= max_tweets:
+            break
+        tweets_list.append({
+            'Datetime': tweet.date.strftime('%Y-%m-%d %H:%M:%S'),
+            'Tweet ID': tweet.id,
+            'Text': tweet.content,
+            'URL': tweet.url
+        })
+    
+    # Create a DataFrame
+    df = pd.DataFrame(tweets_list)
+    return df
+
+# Define parameters for both date ranges
+parameters = [
+    {
+        'username': 'narendramodi',
+        'since': '2019-01-01',
+        'until': '2019-08-01',
+        'max_tweets': 1000,  # Adjust as needed
+        'filename': 'modi_tweets_range_1.csv'
+    },
+    {
+        'username': 'narendramodi',
+        'since': '2019-12-31',
+        'until': '2021-04-01',
+        'max_tweets': 1000,  # Adjust as needed
+        'filename': 'modi_tweets_range_2.csv'
+    }
+]
+
+# Scrape and save each range
+for param in parameters:
+    print(f"Scraping tweets from {param['since']} to {param['until']}...")
+    df = scrape_tweets(param['username'], param['since'], param['until'], param['max_tweets'])
+    df.to_csv(param['filename'], index=False)
+    print(f"Saved {len(df)} tweets to {param['filename']}\n")
+
+print("Tweet scraping completed successfully.")
